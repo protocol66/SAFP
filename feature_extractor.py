@@ -17,6 +17,33 @@ class FeatureExtractor:
             features[i] = f[sgram_max[i]]
             
         return features
+
+    @staticmethod
+    def method2(data):
+        
+        #get power spectral density (Welch's method)
+        p_on_x = 8
+        x = 1
+
+        f, psd = signal.welch(data, fs=16000, window='blackman', nperseg=4096)
+        peaks, properties = signal.find_peaks(psd, width=0, plateau_size=0, height=0)
+
+        dim = (len(peaks),4)
+        peaks_and_properties = np.empty(dim, dtype=np.float32) #[[f,width,plateau_size,height],...]
+        for i in range(len(peaks)):
+            peaks_and_properties[i][0] = f[peaks[i]]
+            peaks_and_properties[i][1] = properties['widths'][i]
+            peaks_and_properties[i][2] = properties['plateau_sizes'][i]
+            peaks_and_properties[i][3] = properties['peak_heights'][i]
+
+        s = sorted(peaks_and_properties, key=lambda p: p[3],reverse=True)
+        
+        features = np.empty(p_on_x*x, dtype=np.float32)
+        for i in range(p_on_x):
+            for j in range(x):
+                features[i*x+j]=s[i][j]
+
+        return features
         
         
 if __name__ == '__main__':

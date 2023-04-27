@@ -139,7 +139,7 @@ class ClassifierTester():
 		print('NN Accuracy with max iterations of ', max_it, 'and ', hidden_layer_sizes, 'hidden layers: ', self.NN_test(hidden_layer_sizes, max_it))
 		print('NB Accuracy: ', self.NB_test())
 		
-tester = ClassifierTester(feature_extr_fn=FeatureExtractor.method1)
+tester = ClassifierTester(feature_extr_fn=FeatureExtractor.method2)
 print('Finished processing data')
 # knn_acc = tester.KNN_test(1)
 # print(f'KNN Accuracy: {knn_acc}')
