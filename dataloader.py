@@ -100,7 +100,7 @@ class Dataloader():
 
 if __name__ == '__main__':
 
-    ds = Dataset('project_final/Project2data', split='train')
+    ds = Dataset('./Project2data', split='train')
     dl = Dataloader(ds, batch_size=1, shuffle=True)
 
     count = 0
@@ -111,3 +111,4 @@ if __name__ == '__main__':
         count += 1
         
     print(f'Number of Samples: {count}')
+    print(f"First sample: {data[0].min()}, {data[0].max()}")
