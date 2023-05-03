@@ -50,15 +50,21 @@ if __name__ == '__main__':
     from matplotlib import pyplot as plt
     from dataloader import Dataset
 
-    data, _, _ = Dataset(path='project_final/Project2data', split='train')[0]
+    data, _, _ = Dataset(path='Project2data', split='train')[0]
     print(f'Shape of data: {data.shape}')
 
     features = FeatureExtractor.method1(data)
+    print(f'Shape of features: {features.shape}')
 
     plt.figure()
     plt.plot(features)
 
-    plt.figure()
-    plt.specgram(data, Fs=16000, NFFT=2048, noverlap=1024)
-
+    # plt.figure()
+    # plt.specgram(data, Fs=16000, NFFT=2048, noverlap=1024)
+    plt.show()
+    
+    # test method2
+    features = FeatureExtractor.method2(data)
+    print(f'Shape of features: {features.shape}')
+    plt.plot(features)
     plt.show()
