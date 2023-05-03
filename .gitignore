@@ -1,5 +1,5 @@
 Project2data/
-results/
+results/*
 *.pkl
 
 # Byte-compiled / optimized / DLL files
