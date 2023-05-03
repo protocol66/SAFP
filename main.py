@@ -28,10 +28,10 @@ def main():
         'KN': KNeighborsClassifier(),
         # 'LDA': LDA(),
         # 'GNB': GaussianNB()
-        # 'SVM': svm.SVC(),
+        'SVM': svm.SVC(),
         'DT': DecisionTreeClassifier(),
-        # 'RF': RandomForestClassifier(),
-        # 'Ada': AdaBoostClassifier(),
+        'RF': RandomForestClassifier(),
+        'Ada': AdaBoostClassifier(),
     }
     ncv_scores = []
     for tester in clf_testers:
