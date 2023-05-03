@@ -26,12 +26,10 @@ def main():
     # create classifiers
     clf = {
         'KN': KNeighborsClassifier(),
-        # 'LDA': LDA(),
         'GNB': GaussianNB(),
-        'SVM': svm.SVC(),
         'DT': DecisionTreeClassifier(),
         'RF': RandomForestClassifier(),
-        # 'Ada': AdaBoostClassifier(),
+        'Ada': AdaBoostClassifier(),
     }
     ncv_scores = []
     for tester in clf_testers:
@@ -43,11 +41,15 @@ def main():
                 continue
             ncv_score = tester.nested_cv_score(clf[c], clf_search_space.get_search_space(c), outer_scoring='f1_macro', inner_scoring='f1_macro')
             print (c, ncv_score)
-            ncv_scores[tester_i][c] = ncv_score['test_score']
+            ncv_scores[tester_i][c] = ncv_score['test_score'] 
     
-    # sort scores
-    for i in range(len(clf_testers)):
-        ncv_scores[i] = {k: v for k, v in sorted(ncv_scores[i].items(), key=lambda item: item[1], reverse=True)} 
+    # average across feature extractors
+    best_avg_ncv_scores = {}
+    for c in clf:
+        best_avg_ncv_scores[c] = sum([ncv_scores[i][c] for i in range(len(clf_testers))])/len(clf_testers)
+    
+    # sort average scores
+    best_avg_ncv_scores = {k: v for k, v in sorted(best_avg_ncv_scores.items(), key=lambda item: item[1], reverse=True)}
     
     # find best 2 classifiers acrost all feature extractors
     # top2 = set()
@@ -55,9 +57,10 @@ def main():
     #     top2.update(list(ncv_scores[i])[:2])
     
     # print best 2 classifiers for each feature extractor
+
     print("\n\nBest 2 classifiers for each feature extractor")
+    top2 = list(best_avg_ncv_scores)[:2]
     for i in range(len(clf_testers)):
-        top2 = list(ncv_scores[i])[:2]
         print(f"Feature Extractor {i}: {top2[0]} score {ncv_scores[i][top2[0]]}, {top2[1]} score {ncv_scores[i][top2[1]]}")
     
     print("\n\nRunning cross validation on best classifiers to find best hyperparameters")
