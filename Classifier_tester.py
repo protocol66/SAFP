@@ -73,6 +73,8 @@ class ClassifierTester():
 			# only pass average if it is a valid argument (is there a better way to do this?)
 			if m in ['recall', 'precision', 'f1']: # TODO: move list outside of function?
 				metric_results[m] = metric_lut[m](y_true, y_pred, average=average)
+			elif m == 'roc_auc':
+				metric_results[m] = metric_lut[m](y_true, y_pred, average=average, multi_class='ovo')
 			else:
 				metric_results[m] = metric_lut[m](y_true, y_pred)
 		return metric_results
@@ -81,6 +83,7 @@ class ClassifierTester():
 	def test_classifier(self, clf):
 		# append classifier to pipeline
 		pipeline = Pipeline([('base', self.base_pipeline), ('clf', clf)])
+		# pipeline = Pipeline([('clf', clf)])
 		pipeline.fit(self.X_train, self.Y_train)
 
 		y_pred = pipeline.predict(self.X_test)
@@ -96,6 +99,7 @@ class ClassifierTester():
 	def cross_validate(self, clf, search_space, scoring='accuracy'):
 		# create pipeline
 		pipeline = Pipeline([('base', self.base_pipeline), ('clf', clf)])
+		# pipeline = Pipeline([('clf', clf)])
   
 		search = self._inner_cv(pipeline, search_space, scoring=scoring)
 		search.fit(self.X_train_full, self.Y_train_full)
@@ -121,103 +125,3 @@ class ClassifierTester():
 		for m in scores:
 			scores[m] = np.mean(scores[m])
 		return scores
-
-	def KNN_test(self, k):
-		
-		knn = KNeighborsClassifier(n_neighbors=k, weights='distance')
-		knn.fit(self.X_train, self.Y_train)
-		
-		y_pred = knn.predict(self.X_val)
-		accuracy = accuracy_score(self.Y_val, y_pred)
-
-		return accuracy
-
-
-	def DT_test(self):
-		
-		dt = DecisionTreeClassifier()
-		dt = dt.fit(self.X_train, self.Y_train)
-		
-		y_pred = dt.predict(self.X_val)
-		accuracy = accuracy_score(self.Y_val, y_pred)
-
-		return accuracy
-
-	# adaboost width decision tree
-	def AdaBoost_test(self):
-		
-		dt = DecisionTreeClassifier()
-		ab = AdaBoostClassifier(estimator=dt, n_estimators=50)
-		ab = ab.fit(self.X_train, self.Y_train)
-		
-		y_pred = ab.predict(self.X_val)
-		accuracy = accuracy_score(self.Y_val, y_pred)
-
-		return accuracy
-
-	def RF_test(self):
-		
-		rf = RandomForestClassifier(n_estimators=100)
-		rf = rf.fit(self.X_train, self.Y_train)
-		
-		y_pred = rf.predict(self.X_val)
-		accuracy = accuracy_score(self.Y_val, y_pred)
-
-		return accuracy
-
-
-	def SVM_test(self):
-		
-		sv = svm.SVC(kernel='linear', C=10)
-		sv = sv.fit(self.X_train, self.Y_train)
-		
-		y_pred = sv.predict(self.X_val)
-		accuracy = accuracy_score(self.Y_val, y_pred)
-
-		return accuracy
-		
-	def NN_test(self, hidden_layers, max_it):
-
-		NN = MLPClassifier(hidden_layer_sizes=hidden_layers, activation='tanh', solver='adam', max_iter=max_it)
-		NN = NN.fit(self.X_train, self.Y_train)
-		
-		y_pred = NN.predict(self.X_val)
-		accuracy = accuracy_score(self.Y_val, y_pred)
-
-		return accuracy
-		
-
-	def NB_test(self):		
-		
-		NB = GaussianNB()
-		NB = NB.fit(self.X_train, self.Y_train)
-		
-		y_pred = NB.predict(self.X_val)
-		accuracy = accuracy_score(self.Y_val, y_pred)
-
-		return accuracy
-
-
-	def AccuracyAssessment(self):
-		# # get dataset from other file
-		# data = GET OUR DATA HERE
-		
-		k = 2
-		hidden_layer_sizes = (1024,1024,1024)
-		max_it = 100000
-		
-		
-		print('KNN Accuracy with ', k, ' neighbors: ', self.KNN_test(k))
-		print('DT Accuracy with depth of ', k, ': ', self.DT_test())
-		print('AdaBoost Accuracy with depth of : ', self.AdaBoost_test())
-		print('RF Accuracy: ', self.RF_test())
-		print('SVM Accuracy: ', self.SVM_test())
-		print('NN Accuracy with max iterations of ', max_it, 'and ', hidden_layer_sizes, 'hidden layers: ', self.NN_test(hidden_layer_sizes, max_it))
-		print('NB Accuracy: ', self.NB_test())
-
-if __name__ == '__main__':
-	tester = ClassifierTester(feature_extr_fn=FeatureExtractor.method1)
-	print('Finished processing data')
-	# knn_acc = tester.KNN_test(1)
-	# print(f'KNN Accuracy: {knn_acc}')
-	tester.AccuracyAssessment()

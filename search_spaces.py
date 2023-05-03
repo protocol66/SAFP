@@ -15,9 +15,9 @@ class ClfSearchSpace():
                 'clf__min_samples_leaf': [1, 2, 5],
                 'clf__class_weight': ['balanced', 'balanced_subsample', None],
                 'clf__bootstrap': [True, False]}
-    ada_space = {'clf__estimator': [DecisionTreeClassifier(),],
-                                    # RandomForestClassifier(n_estimators=10, criterion='gini',
-                                                            # class_weight='balanced', bootstrap=True),],
+    ada_space = {'clf__estimator': [DecisionTreeClassifier(),
+                                    RandomForestClassifier(n_estimators=10, criterion='gini',
+                                                            class_weight='balanced', bootstrap=True),],
                 'clf__n_estimators': [10, 50, 100, 200],
                 'clf__learning_rate': [0.1, 0.5, 0.9, 1.0]}
     svm_space = {'clf__C': [0.1, 0.5, 1, 5],
@@ -43,6 +43,7 @@ class ClfSearchSpace():
                     'KN': kn_space,
                     'MLP': mlp_space,
                     'LDA': lda_space,
+                    'GNB': {},
                     }
     
     def get_search_space(self, clf_name):
