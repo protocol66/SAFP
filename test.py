@@ -1,20 +1,11 @@
 import matplotlib.pyplot as plt
 import pickle
- 
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import AdaBoostClassifier, RandomForestClassifier
-from sklearn import svm
-from sklearn.naive_bayes import GaussianNB
-from sklearn.neural_network import MLPClassifier
+import os
 
-from sklearn.metrics import RocCurveDisplay, ConfusionMatrixDisplay
+from sklearn.metrics import ConfusionMatrixDisplay
 
 from feature_extractor import FeatureExtractor
 from Classifier_tester import ClassifierTester
-from search_spaces import ClfSearchSpace
-
 from train import CLFS_SAVE_PATH
     
 RESULTS_DIR = 'results/'
@@ -29,6 +20,10 @@ def main():
     for tester in clf_testers:
         tester.metrics.append('confusion_matrix')
         # tester.metrics.append('roc_auc')
+        
+    # check if results directory exists, create one if needed
+    if not os.path.exists(RESULTS_DIR):
+        os.makedirs(RESULTS_DIR)
     
     print("\n\nScores for best classifiers")        
     # plot confusion matrix for best classifiers
