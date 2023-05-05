@@ -1,3 +1,6 @@
+# Project 2 - 5/4/23
+# Joshua Adams, Weston Beebe, Parth Patel, Jonathan Sanderson, Samuel Sylvester
+
 import matplotlib.pyplot as plt
 import pickle
  
@@ -20,6 +23,7 @@ CLFS_SAVE_PATH = 'classifers.pkl'
 
 def main():
     clf_search_space = ClfSearchSpace()
+    # create testers with different feature extractors
     clf_testers = [ClassifierTester(feature_extr_fn=FeatureExtractor.method1),
                    ClassifierTester(feature_extr_fn=FeatureExtractor.method2)]
             
@@ -31,17 +35,17 @@ def main():
         'RF': RandomForestClassifier(),
         'Ada': AdaBoostClassifier(),
     }
-    ncv_scores = []
-    for tester in clf_testers:
-        ncv_scores.append({})
+    
+    ncv_scores = [{}]*len(clf_testers)
+    for tester in clf_testers: # for each feature extractor
         tester_i = clf_testers.index(tester)
         print (f"Feature Extractor {tester_i}")
-        for c in clf:
+        for c in clf: # for each classifier
             if c == 'SVM' and tester_i == 1: # SVM is too slow/never completes for method2
                 continue
-            ncv_score = tester.nested_cv_score(clf[c], clf_search_space.get_search_space(c), outer_scoring='f1_macro', inner_scoring='f1_macro')
+            ncv_score = tester.nested_cv_score(clf[c], clf_search_space.get_search_space(c), outer_scoring='f1_macro', inner_scoring='f1_macro') # run nested cross validation
             print (c, ncv_score)
-            ncv_scores[tester_i][c] = ncv_score['test_score'] 
+            ncv_scores[tester_i][c] = ncv_score['test_score'] # add score to dict of scores for this feature extractor 
     
     # average across feature extractors
     best_avg_ncv_scores = {}

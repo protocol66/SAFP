@@ -1,3 +1,6 @@
+# Project 2 - 5/4/23
+# Joshua Adams, Weston Beebe, Parth Patel, Jonathan Sanderson, Samuel Sylvester
+
 import numpy as np
 
 from sklearn.model_selection import train_test_split
@@ -27,7 +30,7 @@ metric_lut = {'accuracy': accuracy_score,
 
 # Functions for finding Accuracy of each classifier
 class ClassifierTester():
-	metrics = ['accuracy', 'recall', 'precision', 'f1']
+	metrics = ['accuracy', 'recall', 'precision', 'f1']  # metrics to use for scoring during testing
     
 	def __init__(self, feature_extr_fn=None, base_pipeline=None):
 		if feature_extr_fn is None:
@@ -40,7 +43,8 @@ class ClassifierTester():
 			self.base_pipeline = Pipeline([('pass', FunctionTransformer(lambda x: x))])
 		else:
 			self.base_pipeline = base_pipeline
-     
+   
+		# load data
 		X_train, Y_train, _ = Dataset(path='Project2data', split='train')[:]
 		X_test, Y_test, _ = Dataset(path='Project2data', split='test')[:]
   
@@ -100,7 +104,7 @@ class ClassifierTester():
 		# create pipeline
 		pipeline = Pipeline([('base', self.base_pipeline), ('clf', clf)])
 		# pipeline = Pipeline([('clf', clf)])
-  
+
 		search = self._inner_cv(pipeline, search_space, scoring=scoring)
 		search.fit(self.X_train_full, self.Y_train_full)
   
@@ -115,10 +119,10 @@ class ClassifierTester():
   
 		# create pipeline
 		pipeline = Pipeline([('base', self.base_pipeline), ('clf', clf)])
-  
+
 		# create grid search
 		search = self._inner_cv(pipeline, search_space, scoring=inner_scoring)
-
+		# perform nested cross validation
 		scores = cross_validate(search, self.X_train_full, self.Y_train_full, scoring=outer_scoring, cv=cv_outer, n_jobs=-1, error_score=np.NaN)
 
 		# return mean of scores

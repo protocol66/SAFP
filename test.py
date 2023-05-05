@@ -1,3 +1,6 @@
+# Project 2 - 5/4/23
+# Joshua Adams, Weston Beebe, Parth Patel, Jonathan Sanderson, Samuel Sylvester
+
 import matplotlib.pyplot as plt
 import pickle
 import os
@@ -13,10 +16,11 @@ RESULTS_DIR = 'results/'
 def main():
     saved_clfs = pickle.load(open(CLFS_SAVE_PATH, 'rb'))
     
+    # create testers with different feature extractors (same as in train.py)
     clf_testers = [ClassifierTester(feature_extr_fn=FeatureExtractor.method1),
                    ClassifierTester(feature_extr_fn=FeatureExtractor.method2)]
     
-    # add confusion matrix to metrics
+    # add confusion matrix to metrics in tester
     for tester in clf_testers:
         tester.metrics.append('confusion_matrix')
         # tester.metrics.append('roc_auc')
@@ -27,9 +31,9 @@ def main():
     
     print("\n\nScores for best classifiers")        
     # plot confusion matrix for best classifiers
-    for i in range(len(clf_testers)):
-        for c in saved_clfs[i]:
-            metrics = clf_testers[i].test_classifier(saved_clfs[i][c])
+    for i in range(len(clf_testers)): # for each feature extractor
+        for c in saved_clfs[i]:       # for each classifier
+            metrics = clf_testers[i].test_classifier(saved_clfs[i][c])                           
             print(f"Feature Extractor {i} - {c:3s}: Accuracy {metrics['accuracy']:.3f} ",
                   f"F1 {metrics['f1']:.3f} ",
                   f"Precision {metrics['precision']:.3f} ",

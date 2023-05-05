@@ -1,3 +1,6 @@
+# Project 2 - 5/4/23
+# Joshua Adams, Weston Beebe, Parth Patel, Jonathan Sanderson, Samuel Sylvester
+
 from scipy.io import wavfile
 from pathlib import Path
 import numpy as np

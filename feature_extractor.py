@@ -1,7 +1,11 @@
+# Project 2 - 5/4/23
+# Joshua Adams, Weston Beebe, Parth Patel, Jonathan Sanderson, Samuel Sylvester
+
 from scipy import signal
 import numpy as np
 
 class FeatureExtractor:
+    # extracts features from song data
     @staticmethod
     def method1(data):
         

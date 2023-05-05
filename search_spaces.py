@@ -1,8 +1,11 @@
+# Project 2 - 5/4/23
+# Joshua Adams, Weston Beebe, Parth Patel, Jonathan Sanderson, Samuel Sylvester
+
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 
-
 class ClfSearchSpace():
+    # parameter grids for GridSearchCV
     # Shotgun approach, one of these should work
     dt_space = {'clf__criterion': ['gini', 'entropy'],
                 'clf__min_samples_split': [2, 5, 10],
@@ -35,6 +38,7 @@ class ClfSearchSpace():
                  {'clf__solver': ['lsqr', 'eigen'],
                   'clf__shrinkage': ['auto', None]}]
 
+    # lookup table
     search_space = {'DT': dt_space,
                     'RF': rf_space,
                     'ET': rf_space,
